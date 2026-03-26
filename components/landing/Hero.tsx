@@ -1,10 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Sparkles, ArrowRight, Play } from "lucide-react";
+import { useAuth, SignUpButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function Hero() {
-  const containerVariants = {
+  const { isLoaded, userId } = useAuth();
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
@@ -12,7 +15,7 @@ export default function Hero() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: { 
       y: 0, 
@@ -47,9 +50,17 @@ export default function Hero() {
           </motion.p>
           
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-[0_0_30px_rgba(147,51,234,0.3)]">
-              Start Creating for Free <ArrowRight className="w-5 h-5" />
-            </button>
+            {!isLoaded ? null : !userId ? (
+              <SignUpButton mode="modal">
+                <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-[0_0_30px_rgba(147,51,234,0.3)]">
+                  Start Creating for Free <ArrowRight className="w-5 h-5" />
+                </button>
+              </SignUpButton>
+            ) : (
+              <Link href="/dashboard" className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-[0_0_30px_rgba(147,51,234,0.3)]">
+                Go to Dashboard <ArrowRight className="w-5 h-5" />
+              </Link>
+            )}
             <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/5 border border-white/10 text-white font-semibold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors">
               <Play className="w-5 h-5" /> Watch Demo
             </button>

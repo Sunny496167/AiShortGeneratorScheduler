@@ -1,9 +1,12 @@
 "use client";
 
+import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
 import { Play } from "lucide-react";
 import Link from "next/link";
 
 export default function Navbar() {
+  const { isLoaded, userId } = useAuth();
+
   return (
     <header className="relative z-50 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -19,12 +22,27 @@ export default function Navbar() {
           <Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link>
         </nav>
         <div className="flex items-center gap-4">
-          <button className="text-sm font-medium text-slate-300 hover:text-white transition-colors hidden sm:block">
-            Log in
-          </button>
-          <button className="px-5 py-2.5 rounded-full bg-white text-slate-950 text-sm font-semibold hover:bg-slate-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-            Get Started
-          </button>
+          {!isLoaded ? null : !userId ? (
+            <>
+              <SignInButton mode="modal">
+                <button className="text-sm font-medium text-slate-300 hover:text-white transition-colors hidden sm:block">
+                  Log in
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="px-5 py-2.5 rounded-full bg-white text-slate-950 text-sm font-semibold hover:bg-slate-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                  Get Started
+                </button>
+              </SignUpButton>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard" className="px-5 py-2.5 rounded-full bg-white/10 text-white text-sm font-semibold hover:bg-white/20 transition-colors hidden sm:block">
+                Dashboard
+              </Link>
+              <UserButton />
+            </>
+          )}
         </div>
       </div>
     </header>
