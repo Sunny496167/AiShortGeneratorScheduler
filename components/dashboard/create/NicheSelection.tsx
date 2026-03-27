@@ -101,8 +101,7 @@ export const NicheSelection = ({ initialData, onNext }: NicheSelectionProps) => 
 
         <TabsContent value="available" className="w-full flex-1">
           <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6 mb-8">
-            <div className="max-h-96 overflow-y-auto pr-2 custom-scrollbar">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {availableNiches.map((niche) => {
                   const isSelected = selectedNiche === niche.id;
                   return (
@@ -110,26 +109,26 @@ export const NicheSelection = ({ initialData, onNext }: NicheSelectionProps) => 
                       key={niche.id}
                       onClick={() => setSelectedNiche(niche.id)}
                       className={cn(
-                        "p-4 rounded-xl border flex items-start gap-4 cursor-pointer transition-all duration-200",
+                        "p-4 rounded-xl border flex flex-col items-center text-center gap-3 cursor-pointer transition-all duration-200",
                         isSelected 
-                          ? "bg-purple-500/10 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)]" 
-                          : "bg-slate-800/50 border-white/5 hover:border-white/10 hover:bg-slate-800"
+                          ? "bg-purple-500/10 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)] scale-[1.02]" 
+                          : "bg-slate-800/50 border-white/5 hover:border-white/10 hover:bg-slate-800 hover:scale-[1.02]"
                       )}
                     >
                       <div className={cn(
-                        "p-2 rounded-lg",
+                        "p-3 rounded-2xl",
                         isSelected ? "bg-purple-500/20 text-purple-400" : "bg-white/5 text-slate-400"
                       )}>
-                        <niche.icon className="w-6 h-6" />
+                        <niche.icon className="w-8 h-8" strokeWidth={1.5} />
                       </div>
                       <div>
                         <h3 className={cn(
-                          "font-semibold mb-1",
+                          "font-semibold text-sm mb-1",
                           isSelected ? "text-purple-300" : "text-slate-200"
                         )}>
                           {niche.title}
                         </h3>
-                        <p className="text-sm text-slate-400 line-clamp-2">
+                        <p className="text-xs text-slate-400 line-clamp-2">
                           {niche.description}
                         </p>
                       </div>
@@ -137,7 +136,6 @@ export const NicheSelection = ({ initialData, onNext }: NicheSelectionProps) => 
                   );
                 })}
               </div>
-            </div>
           </div>
         </TabsContent>
 

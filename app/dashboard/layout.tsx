@@ -18,9 +18,9 @@ export default function DashboardLayout({
 
       {/* Desktop Sidebar (hidden on smaller screens) */}
       <div className="hidden lg:flex h-full relative z-10">
-        <Sidebar  />
+        <Sidebar />
       </div>
-      
+
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
         <Header />
