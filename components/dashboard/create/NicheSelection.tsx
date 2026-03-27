@@ -5,9 +5,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { BookOpen, Ghost, Lightbulb, Gamepad2, Laptop, MessageSquare, ArrowRight } from "lucide-react";
+import { StepFooter } from "@/components/dashboard/create/StepFooter";
+
+export interface CreateSeriesData {
+  nicheType: "available" | "custom";
+  nicheId: string;
+  customNicheDescription: string;
+}
 
 interface NicheSelectionProps {
-  onNext: () => void;
+  initialData: CreateSeriesData;
+  onNext: (data: Partial<CreateSeriesData>) => void;
 }
 
 const availableNiches = [
@@ -49,13 +57,25 @@ const availableNiches = [
   },
 ];
 
-export const NicheSelection = ({ onNext }: NicheSelectionProps) => {
-  const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
+export const NicheSelection = ({ initialData, onNext }: NicheSelectionProps) => {
+  const [activeTab, setActiveTab] = useState<"available" | "custom">(initialData.nicheType || "available");
+  const [selectedNiche, setSelectedNiche] = useState<string>(initialData.nicheId || "");
+  const [customDescription, setCustomDescription] = useState<string>(initialData.customNicheDescription || "");
+
+  const handleNext = () => {
+    onNext({
+      nicheType: activeTab,
+      nicheId: selectedNiche,
+      customNicheDescription: customDescription
+    });
+  };
+
+  const isNextDisabled = activeTab === "available" ? !selectedNiche : customDescription.length < 10;
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+    <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
+      <div className="mb-8 text-center shrink-0">
+        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-linear-to-r from-purple-400 to-blue-400">
           Select Your Niche
         </h2>
         <p className="text-slate-400 mt-2">
@@ -63,7 +83,7 @@ export const NicheSelection = ({ onNext }: NicheSelectionProps) => {
         </p>
       </div>
 
-      <Tabs defaultValue="available" className="w-full">
+      <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as "available" | "custom")} className="w-full flex-1 flex flex-col">
         <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-slate-900 border border-white/10 p-1 mb-8">
           <TabsTrigger 
             value="available"
@@ -79,8 +99,8 @@ export const NicheSelection = ({ onNext }: NicheSelectionProps) => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="available" className="w-full">
-          <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6">
+        <TabsContent value="available" className="w-full flex-1">
+          <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6 mb-8">
             <div className="max-h-96 overflow-y-auto pr-2 custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {availableNiches.map((niche) => {
@@ -118,22 +138,11 @@ export const NicheSelection = ({ onNext }: NicheSelectionProps) => {
                 })}
               </div>
             </div>
-            
-            <div className="mt-8 pt-6 border-t border-white/10 flex justify-end">
-              <Button 
-                onClick={onNext}
-                disabled={!selectedNiche}
-                className="bg-white text-slate-950 hover:bg-slate-200 shadow-[0_0_20px_rgba(255,255,255,0.1)] px-8 py-2 rounded-full font-semibold"
-              >
-                Continue to Next Step
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
           </div>
         </TabsContent>
 
-        <TabsContent value="custom">
-          <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
+        <TabsContent value="custom" className="flex-1">
+          <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center mb-8">
             <div className="py-12">
               <Lightbulb className="w-12 h-12 text-slate-600 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-slate-200 mb-2">Have a unique idea?</h3>
@@ -146,24 +155,23 @@ export const NicheSelection = ({ onNext }: NicheSelectionProps) => {
                   Describe your Niche
                 </label>
                 <textarea 
+                  value={customDescription}
+                  onChange={(e) => setCustomDescription(e.target.value)}
                   className="w-full h-32 bg-slate-800 border border-white/10 rounded-xl p-4 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 resize-none"
                   placeholder="e.g. A channel dedicated to 1920s jazz history facts and vintage photos..."
                 />
               </div>
             </div>
-            
-            <div className="pt-6 border-t border-white/10 flex justify-end">
-              <Button 
-                onClick={onNext}
-                className="bg-white text-slate-950 hover:bg-slate-200 shadow-[0_0_20px_rgba(255,255,255,0.1)] px-8 py-2 rounded-full font-semibold"
-              >
-                Continue to Next Step
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
           </div>
         </TabsContent>
       </Tabs>
+
+      <div className="mt-auto">
+        <StepFooter 
+          onNext={handleNext} 
+          isNextDisabled={isNextDisabled} 
+        />
+      </div>
     </div>
   );
 };

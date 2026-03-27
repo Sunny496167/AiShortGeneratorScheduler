@@ -24,7 +24,7 @@ export const Stepper = ({ currentStep }: StepperProps) => {
           
           {/* Active Progress Bar */}
           <div 
-            className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full z-0 transition-all duration-300"
+            className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-linear-to-r from-purple-500 to-blue-500 rounded-full z-0 transition-all duration-300"
             style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
           ></div>
 
