@@ -4,7 +4,10 @@ import { useState } from "react";
 import { Stepper } from "@/components/dashboard/create/Stepper";
 import { NicheSelection } from "@/components/dashboard/create/NicheSelection";
 import { VoiceSelection } from "@/components/dashboard/create/VoiceSelection";
-import { StepFooter } from "@/components/dashboard/create/StepFooter";
+import { VisualSelection } from "@/components/dashboard/create/VisualSelection";
+import { MusicSelection } from "@/components/dashboard/create/MusicSelection";
+import { ScheduleSelection } from "@/components/dashboard/create/ScheduleSelection";
+import { ReviewSelection } from "@/components/dashboard/create/ReviewSelection";
 
 export interface CreateSeriesData {
   nicheType: "available" | "custom";
@@ -14,6 +17,10 @@ export interface CreateSeriesData {
   voiceId: string;
   voiceModel: string;
   voiceName: string;
+  visualStyle: string;
+  musicStyle: string;
+  scheduleFrequency: string;
+  scheduleTime: string;
 }
 
 const initialFormData: CreateSeriesData = {
@@ -23,7 +30,11 @@ const initialFormData: CreateSeriesData = {
   language: "English",
   voiceId: "",
   voiceModel: "",
-  voiceName: ""
+  voiceName: "",
+  visualStyle: "",
+  musicStyle: "",
+  scheduleFrequency: "daily",
+  scheduleTime: "18:00"
 };
 
 export default function CreateSeriesPage() {
@@ -35,10 +46,24 @@ export default function CreateSeriesPage() {
     setCurrentStep(2);
   };
 
-  const handleNext = () => {
-    if (currentStep < 6) {
-      setCurrentStep((prev) => prev + 1);
-    }
+  const handleNextStep2 = (stepData: Partial<CreateSeriesData>) => {
+    setFormData(prev => ({ ...prev, ...stepData }));
+    setCurrentStep(3);
+  };
+
+  const handleNextStep3 = (stepData: Partial<CreateSeriesData>) => {
+    setFormData(prev => ({ ...prev, ...stepData }));
+    setCurrentStep(4);
+  };
+
+  const handleNextStep4 = (stepData: Partial<CreateSeriesData>) => {
+    setFormData(prev => ({ ...prev, ...stepData }));
+    setCurrentStep(5);
+  };
+
+  const handleNextStep5 = (stepData: Partial<CreateSeriesData>) => {
+    setFormData(prev => ({ ...prev, ...stepData }));
+    setCurrentStep(6);
   };
 
   const handleBack = () => {
@@ -64,30 +89,40 @@ export default function CreateSeriesPage() {
         {currentStep === 2 && (
           <VoiceSelection
             initialData={formData}
-            onNext={(stepData) => {
-              setFormData((prev) => ({ ...prev, ...stepData }));
-              setCurrentStep(3);
-            }}
+            onNext={handleNextStep2}
             onBack={handleBack}
           />
         )}
 
-        {/* Placeholders for subsequent steps */}
-        {currentStep > 2 && (
-          <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
-            <div className="text-center py-20 flex-1 text-slate-400">
-              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-linear-to-r from-purple-400 to-blue-400 mb-4">
-                Step {currentStep} under construction.
-              </h2>
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-white/5 text-left text-slate-300 text-sm font-mono max-w-lg mx-auto overflow-auto mt-8">
-                <span className="text-purple-400 block mb-2">// Current Global State</span>
-                {JSON.stringify(formData, null, 2)}
-              </div>
-            </div>
-            <div className="mt-auto">
-              <StepFooter onNext={handleNext} onBack={handleBack} showBack />
-            </div>
-          </div>
+        {currentStep === 3 && (
+          <VisualSelection
+            initialData={formData}
+            onNext={handleNextStep3}
+            onBack={handleBack}
+          />
+        )}
+
+        {currentStep === 4 && (
+          <MusicSelection
+            initialData={formData}
+            onNext={handleNextStep4}
+            onBack={handleBack}
+          />
+        )}
+
+        {currentStep === 5 && (
+          <ScheduleSelection
+            initialData={formData}
+            onNext={handleNextStep5}
+            onBack={handleBack}
+          />
+        )}
+
+        {currentStep === 6 && (
+          <ReviewSelection
+            initialData={formData}
+            onBack={handleBack}
+          />
         )}
       </div>
     </div>
